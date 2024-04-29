@@ -1,0 +1,50 @@
+--- git status ---
+On branch master
+Your branch is up to date with 'origin/master'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   legged_gym/envs/base/base_task.py
+	modified:   legged_gym/utils/helpers.py
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	rsl_rl/
+
+no changes added to commit (use "git add" and/or "git commit -a") 
+
+
+--- git diff ---
+diff --git a/legged_gym/envs/base/base_task.py b/legged_gym/envs/base/base_task.py
+index f5257c8..4bc57c9 100644
+--- a/legged_gym/envs/base/base_task.py
++++ b/legged_gym/envs/base/base_task.py
+@@ -99,7 +99,7 @@ class BaseTask():
+                 self.viewer, gymapi.KEY_V, "toggle_viewer_sync")
+ 
+     def get_observations(self):
+-        return self.obs_buf
++        return self.obs_buf, self.privileged_obs_buf
+     
+     def get_privileged_observations(self):
+         return self.privileged_obs_buf
+diff --git a/legged_gym/utils/helpers.py b/legged_gym/utils/helpers.py
+index b05efaa..ecd44d8 100644
+--- a/legged_gym/utils/helpers.py
++++ b/legged_gym/utils/helpers.py
+@@ -169,12 +169,8 @@ def get_args():
+     args = gymutil.parse_arguments(
+         description="RL Policy",
+         custom_parameters=custom_parameters)
+-
+-    # name allignment
+-    args.sim_device_id = args.compute_device_id
+-    args.sim_device = args.sim_device_type
+-    if args.sim_device=='cuda':
+-        args.sim_device += f":{args.sim_device_id}"
++    
++    args.sim_device = args.rl_device
+     return args
+ 
+ def export_policy_as_jit(actor_critic, path):
